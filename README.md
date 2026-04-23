@@ -1,2 +1,2 @@
 # Data-Warehouse
-Building a modern data warehouse with SQL server, including ETL process, data modeling and analytics
+Building a modern data warehouse with SQL server, including ETL processes, data modeling and analytics
