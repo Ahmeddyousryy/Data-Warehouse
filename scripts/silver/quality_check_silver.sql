@@ -90,4 +90,58 @@ WHERE prd_start_dt > prd_end_dt
 
 ----------------- CHECKING DATA QUALITY FOR TABLE bronze.crm_sales_details ------------------------------
 
-select * from bronze.crm_sales_details
+-- Check for null or duplicates in the primary key
+SELECT
+count(*)
+FROM bronze.crm_sales_details
+GROUP BY  sls_ord_num
+HAVING count(*) > 1 OR sls_ord_num IS NULL
+
+
+-- Check that the links between the tables works well , (sales_details.prd_key -> prd_info.prd_key)
+--                                                      (sales_details.cust_id -> cust_info.cst_id)
+SELECT
+*
+FROM bronze.crm_sales_details
+WHERE sls_cust_id NOT IN (select cst_id   from silver.crm_cust_info)
+OR    sls_prd_key NOT IN (select prd_key  from silver.crm_prd_info)
+
+
+-- Check the quality of the dates (sls_order_dt < sls_ship_dt < sls_due_dt AND dates are not zero AND len(date) = 8) 
+-- and check for outliers (20500101 , 1900101)
+SELECT
+CASE 
+WHEN LEN(sls_order_dt) != 8 OR sls_order_dt <= 0 THEN NULL
+ELSE sls_order_dt
+END AS sls_order_dt,
+sls_ship_dt,
+sls_due_dt
+
+FROM bronze.crm_sales_details
+WHERE sls_order_dt <= 0 OR sls_ship_dt <= 0 OR sls_due_dt = 0 OR sls_order_dt > sls_ship_dt
+ OR   sls_order_dt > sls_due_dt OR LEN(sls_order_dt) != 8  OR LEN(sls_ship_dt) != 8
+ OR LEN(sls_due_dt) != 8
+ OR sls_order_dt > 20500101 OR sls_order_dt < 1900101
+
+
+
+ -- sales is negative , zero , NULL 
+ -- price is null and negative
+ -- quantity is fine 
+ -- Check validty of business logic (sale = quantity * price)
+ SELECT DISTINCT
+	sls_sales,
+
+	CASE 
+	WHEN sls_sales IS NULL OR sls_sales <= 0 OR sls_sales != sls_quantity *  ABS(sls_price) THEN sls_quantity *  ABS(sls_price)
+	ELSE  sls_sales
+	END sls_sales,
+
+	sls_quantity,
+
+	CASE
+		WHEN sls_price IS NULL OR sls_price <= 0 THEN sls_sales / NULLIF(sls_quantity,0)
+		ELSE  sls_price
+	END sls_price
+FROM bronze.crm_sales_details
+WHERE sls_sales != sls_quantity *  sls_price
