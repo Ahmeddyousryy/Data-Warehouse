@@ -140,3 +140,20 @@ SELECT
 		ELSE 'n/a'
 	END AS GEN
 FROM bronze.erp_cust_az12
+
+
+------------------------------- CLEANING AND TRANSFORMING TABLE bronze.erp_loc_a101 --------------------------
+TRUNCATE TABLE silver.erp_loc_a101;
+INSERT INTO silver.erp_loc_a101(
+	CID,
+	CNTRY
+)
+SELECT
+	CID,
+	CASE
+		WHEN CNTRY = 'DE' THEN 'Germany'
+		WHEN CNTRY IN ('USA','US')  THEN 'United States'
+		WHEN TRIM(CNTRY) = '' OR CNTRY IS NULL THEN 'n/a'
+		ELSE CNTRY
+	END AS CNTRY
+FROM bronze.erp_loc_a101
