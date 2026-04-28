@@ -119,3 +119,24 @@ CASE
 	ELSE  sls_price
 END AS sls_price
 FROM bronze.crm_sales_details
+
+
+------------------------------- CLEANING AND TRANSFORMING TABLE bronze.erp_cust_az12 --------------------------
+TRUNCATE TABLE silver.erp_cust_az12;
+INSERT INTO silver.erp_cust_az12(
+	CID,
+	BDATE,
+	GEN
+)
+SELECT 
+	CID,
+	CASE
+		WHEN BDATE > '2026-01-01' OR BDATE < '1900-01-01' THEN NULL
+		ELSE BDATE
+	END BDATE,
+	CASE
+		WHEN GEN IN ('Male','M')   THEN 'Male'
+		WHEN GEN IN ('Female','F') THEN 'Female'
+		ELSE 'n/a'
+	END AS GEN
+FROM bronze.erp_cust_az12
