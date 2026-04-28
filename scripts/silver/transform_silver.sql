@@ -43,7 +43,7 @@ WHERE flag_last = 1
 
 
 
-------------------------------- CLEANING AND TRANSFORMING TABLE bronze.crm_cust_info --------------------------
+------------------------------- CLEANING AND TRANSFORMING TABLE bronze.crm_prd_info --------------------------
 TRUNCATE TABLE silver.crm_prd_info;
 INSERT INTO silver.crm_prd_info (
 prd_id,
