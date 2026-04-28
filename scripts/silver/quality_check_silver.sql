@@ -145,3 +145,23 @@ WHERE sls_order_dt <= 0 OR sls_ship_dt <= 0 OR sls_due_dt = 0 OR sls_order_dt > 
 	END sls_price
 FROM bronze.crm_sales_details
 WHERE sls_sales != sls_quantity *  sls_price
+
+----------------- CHECKING DATA QUALITY FOR TABLE bronze.erp_cust_az12 ------------------------------
+-- Check for duplicates OR NULL values in the primary key
+SELECT
+CID,
+COUNT(CID)
+FROM bronze.erp_cust_az12
+GROUP BY CID
+HAVING COUNT(CID) >1 OR CID IS NULL
+
+
+-- Check for missing or wrong values
+SELECT DISTINCT
+GEN
+FROM bronze.erp_cust_az12
+
+-- Check for invalid dates
+SELECT *
+FROM bronze.erp_cust_az12
+WHERE BDATE > '2026-01-01' OR BDATE < '1900-01-01'
