@@ -165,3 +165,19 @@ FROM bronze.erp_cust_az12
 SELECT *
 FROM bronze.erp_cust_az12
 WHERE BDATE > '2026-01-01' OR BDATE < '1900-01-01'
+
+----------------- CHECKING DATA QUALITY FOR TABLE bronze.erp_loc_a101 ------------------------------
+
+-- Check for duplicates or nulls in the primary key
+SELECT
+CID,
+COUNT(CID)
+FROM bronze.erp_loc_a101
+GROUP BY CID
+HAVING COUNT(CID) > 1 OR CID IS NULL
+
+-- Check for inconsistent values (not normalized or standardized values)
+SELECT DISTINCT
+CNTRY
+FROM bronze.erp_loc_a101
+
