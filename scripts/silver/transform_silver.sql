@@ -129,18 +129,20 @@ INSERT INTO silver.erp_cust_az12(
 	GEN
 )
 SELECT 
-	CID,
 	CASE
-		WHEN BDATE > '2026-01-01' OR BDATE < '1900-01-01' THEN NULL
+		WHEN CID LIKE 'NAS%' THEN SUBSTRING(CID,4,LEN(CID))
+		ELSE CID
+	END AS CID,
+	CASE
+		WHEN BDATE > GETDATE() OR BDATE < '1900-01-01' THEN NULL
 		ELSE BDATE
 	END BDATE,
 	CASE
-		WHEN GEN IN ('Male','M')   THEN 'Male'
-		WHEN GEN IN ('Female','F') THEN 'Female'
+		WHEN LOWER(TRIM(GEN)) IN ('male','m')   THEN 'Male'
+		WHEN LOWER(TRIM(GEN)) IN ('female','f') THEN 'Female'
 		ELSE 'n/a'
 	END AS GEN
 FROM bronze.erp_cust_az12
-
 
 ------------------------------- CLEANING AND TRANSFORMING TABLE bronze.erp_loc_a101 --------------------------
 TRUNCATE TABLE silver.erp_loc_a101;
