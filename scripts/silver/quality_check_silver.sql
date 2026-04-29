@@ -181,3 +181,14 @@ SELECT DISTINCT
 CNTRY
 FROM bronze.erp_loc_a101
 
+
+	----------------- CHECKING DATA QUALITY FOR TABLE bronze.erp_px_cat_g1v2 ------------------------------
+
+-- Check for unstandardized values
+SELECT DISTINCT
+MAINTENANCE
+FROM bronze.erp_px_cat_g1v2
+
+SELECT DISTINCT
+CAT
+FROM bronze.erp_px_cat_g1v2
