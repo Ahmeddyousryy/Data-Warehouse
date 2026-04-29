@@ -151,10 +151,10 @@ INSERT INTO silver.erp_loc_a101(
 	CNTRY
 )
 SELECT
-	CID,
+	REPLACE(CID,'-','') CID,
 	CASE
-		WHEN CNTRY = 'DE' THEN 'Germany'
-		WHEN CNTRY IN ('USA','US')  THEN 'United States'
+		WHEN TRIM(CNTRY) = 'DE' THEN 'Germany'
+		WHEN TRIM(CNTRY) IN ('USA','US')  THEN 'United States'
 		WHEN TRIM(CNTRY) = '' OR CNTRY IS NULL THEN 'n/a'
 		ELSE CNTRY
 	END AS CNTRY
