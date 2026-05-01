@@ -12,11 +12,11 @@ This project includes:
 - **Data Modeling**: Building fact and dimension tables optimized for analytics 
 ---
 
-## 🏗️ Data Architecture
+## Data Architecture
 
 The data architecture for this project follows the **Medallion Architecture** pattern with Bronze, Silver, and Gold layers.
 
-![Data Architecture](./docs/Data Architecutre Design.svg)
+![Data Architecture](./docs/Data%20Architecture%20Design.svg)
 
 ### Bronze Layer
 - Stores raw data as-is from source systems  
@@ -33,7 +33,7 @@ The data architecture for this project follows the **Medallion Architecture** pa
 ---
 
 
-## 🎯 Skills Demonstrated
+## Skills Demonstrated
 
 - SQL Development  
 - Data Architecture  
